@@ -10,35 +10,41 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Image from "next/image";
+import Link from "next/link";
 
 export function CarouselPlugin() {
   const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true })
+    Autoplay({ delay: 3000, stopOnInteraction: true })
   );
 
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="w-full max-w-xs"
-      onMouseEnter={plugin.current.stop}
-      onMouseLeave={plugin.current.reset}
+      className="w-full   "
+      //   onMouseEnter={plugin.current.stop}
+      //   onMouseLeave={plugin.current.reset}
       opts={{ align: "center", loop: true }}
     >
       <CarouselContent>
         {Array.from({ length: 5 }).map((_, index) => (
           <CarouselItem key={index} className="basis-1/2">
-            <div className="p-1">
-              <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
-                  <span className="text-4xl font-semibold">{index + 1}</span>
-                </CardContent>
-              </Card>
+            <div className="">
+              <Link href={`/novel/${index + 1}`}>
+                <Image
+                  src="https://placehold.co/700x373/png"
+                  alt="carousel image"
+                  width={700}
+                  height={373}
+                  className="h-full w-full"
+                />
+              </Link>
             </div>
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious className="left-4 opacity-80" />
+      <CarouselNext className="right-4 opacity-80" />
     </Carousel>
   );
 }
