@@ -3,7 +3,10 @@ import NovelSection from "@/components/component/NovelSection";
 import { Button } from "@/components/ui/button";
 
 async function getNovels() {
-  const response = await fetch(`${process.env.MOCK_NOVELS_API}/novels`, {
+  const url = new URL(`${process.env.MOCK_NOVELS_API}/novels`);
+  url.searchParams.append("sortBy", "last_visit");
+  url.searchParams.append("order", "desc");
+  const response = await fetch(url, {
     cache: "no-store",
   });
   if (!response.ok) {
