@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { Prompt } from "next/font/google";
+import { Noto_Sans_Thai } from "next/font/google";
 import "./globals.css";
 
-const prompt = Prompt({ subsets: ["latin"], weight: ["400", "700"] });
+const font = Noto_Sans_Thai({
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={prompt.className}>{children}</body>
+      <body className={font.className}>{children}</body>
     </html>
   );
 }

@@ -1,3 +1,3 @@
 export default function Page({ params }: { params: { slug: string } }) {
-  return <div>Novel: {params.slug}</div>;
+  return <div className="p-4">นิยายเรื่องที่: {params.slug}</div>;
 }

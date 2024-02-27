@@ -16,12 +16,13 @@ import Link from "next/link";
 import { Progress } from "../ui/progress";
 
 export function CarouselPlugin() {
+  const novelcount = 12;
   const plugin = React.useRef(
-    Autoplay({ delay: 4000, stopOnInteraction: false, stopOnMouseEnter: true })
+    Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true })
   );
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(1);
-  const [count, setCount] = React.useState(6);
+  const [count, setCount] = React.useState(novelcount);
 
   React.useEffect(() => {
     if (!api) {
@@ -42,16 +43,17 @@ export function CarouselPlugin() {
       plugins={[plugin.current]}
       opts={{ align: "center", loop: true }}
     >
-      <CarouselContent className="">
-        {Array.from({ length: 6 }).map((_, index) => (
-          <CarouselItem key={index} className="pl-0 md:basis-1/2 md:pl-3">
-            <div className="">
+      <CarouselContent>
+        {Array.from({ length: novelcount }).map((_, index) => (
+          <CarouselItem key={index} className="pl-0 md:basis-1/2 md:pl-4">
+            <div>
               <Link href={`/novel/${index + 1}`}>
                 <Image
                   src="https://placehold.co/700x373/png"
                   alt="carousel image"
                   width={700}
                   height={373}
+                  className="w-full rounded-b-sm transition-transform transform hover:opacity-90"
                 />
               </Link>
             </div>
