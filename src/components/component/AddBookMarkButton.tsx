@@ -26,28 +26,32 @@ export function AddBookMarkButton() {
       last_visit: new Date().toISOString(), // Random recent date
     };
 
-    console.log(novelData);
+    // console.log(novelData);
 
     try {
-      await toast.promise(
-        fetch("https://65de0557dccfcd562f561883.mockapi.io/api/novels", {
+      // Show loading toast
+      const loadingToastId = toast.loading("กำลังเพิ่ม...");
+
+      // Set a delay before making the POST request
+      const delay = 1000; // 1 second delay
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_MOCK_NOVELS_API}/api/novels`,
+        {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(novelData),
-        }).then((response) => {
-          if (!response.ok) {
-            throw new Error("Can't add new bookmark");
-          }
-          return response.json();
-        }),
-        {
-          loading: "กำลังเพิ่ม...",
-          success: <b>เพิ่มที่คั่นสำเร็จ!</b>,
-          error: <b>เพิ่มที่คั่นไม่สำเร็จ</b>,
         }
       );
+      toast.remove(loadingToastId);
+      if (!response.ok) {
+        toast.error("เพิ่มไม่สำเร็จ");
+        throw new Error("Can't add new bookmark");
+      }
+      toast.success("เพิ่มที่คั่นใหม่สำเร็จ!");
+      return response.json();
     } catch (error) {
       console.error("Error posting data:", error);
     } finally {

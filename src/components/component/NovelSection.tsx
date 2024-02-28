@@ -76,12 +76,17 @@ export default function NovelSection({ novels }: { novels: Novel[] }) {
     const url = new URL(
       `${process.env.NEXT_PUBLIC_MOCK_NOVELS_API}/api/novels`
     );
-
+    let countDelete = 0;
     try {
       toast.loading("กำลังลบ...");
 
       const deletePromises = arrNovelId.map(async (id) => {
-        console.log(id);
+        const delay = 1000; // DELAY_INTERVAL is the delay time in milliseconds
+
+        // Use setTimeout to add a delay before each deletion request
+        await new Promise((resolve) => setTimeout(resolve, delay));
+
+        // console.log(id);
         const response = await fetch(`${url}/${id}`, {
           method: "DELETE",
         });
@@ -91,7 +96,7 @@ export default function NovelSection({ novels }: { novels: Novel[] }) {
             `Failed to delete novel with ID ${id}. Status: ${response.status}`
           );
         }
-
+        countDelete++;
         return response.json();
       });
 
@@ -101,16 +106,17 @@ export default function NovelSection({ novels }: { novels: Novel[] }) {
 
       toast.success("ลบเรียบร้อยแล้ว!");
 
-      router.refresh();
-
-      form.setValue("novels", []);
+      setIsEnableCheckBox(false);
+      setCheckedCount(0);
     } catch (error) {
       console.error("An error occurred while deleting novels:", error);
       toast.dismiss();
-      toast.error("ลบไม่สำเร็จ");
-    } finally {
+      toast.error("ลบไม่สำเร็จ ");
       setIsEnableCheckBox(false);
-      setCheckedCount(0);
+      setCheckedCount(checkedCount - countDelete);
+    } finally {
+      router.refresh();
+      form.setValue("novels", []);
     }
   }
 
