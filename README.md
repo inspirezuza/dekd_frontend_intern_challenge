@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Dekd frontend Challenge
 
-## Getting Started
+Deploy: https://dekd-frontend-intern-challenge.vercel.app/
 
-First, run the development server:
+โจทย์: https://vintage-painter-228.notion.site/Frontend-Quiz-Dev-9466837540634c4094dcc6f5ef7c4b4f
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Figma: https://www.figma.com/file/QMVNPA4ODcvGQ8663JwTVx/Quiz%3A-Frontend?type=design&node-id=2-2364&mode=design&t=srCdOgm31LtL0WBg-0
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Requirement
+- ผู้ใช้งานสามารถ สร้าง / แก้ไข / ลบ รายการนิยายที่คั่นไว้ได้
+- แสดงรายการแบนเนอร์นิยายมาใหม่
+- รองรับการแสดงผลบน Web Responsive
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+ระบบที่เพิ่มจาก Requirement
+- มีการปรับแต่ง ui บางส่วนเพื่อความสวยงาม
+- ทำการเชื่อมต่อกับ mockapi.io ในการเพิ่มและลบที่คั่น
+- เพิ่มปุ่มในการเพิ่มที่คั่น
+- ป้องกันการ spam ด้วยการใส่ delay ไว้
+- เพิ่ม loading, sucess และ error toast จาก react hot toast
+- เพิ่มหน้าสำหรับนิยายแต่ละเรื่องคร่าวๆ
+- เพิ่มหน้าสำหรับนักเขียนแต่ละคนคร่าวๆ
+- เพิ่ม alert dialog สำหรับการกดลบที่คั่นที่เลือกไว้
+- ใช้ ssr ในการดึงข้อมูลจาก mockapi.io 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Technology ที่ใช้
+- Nextjs
+- Shadcn/ui
 
-## Learn More
+Web service ที่ใช้
+- mockapi.io
+- placehold.co
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
