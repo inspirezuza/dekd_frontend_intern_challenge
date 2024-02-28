@@ -24,15 +24,48 @@ import { useState } from "react";
 import { LoadingSpinner } from "../ui/loadingspinner";
 import { Loader2 } from "lucide-react";
 import { AddBookMarkButton } from "./AddBookMarkButton";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import NovelCard from "@/components/component/NovelCard";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Checkbox } from "@/components/ui/checkbox";
+
+const FormSchema = z.object({
+  novels: z.array(z.string()).refine((value) => value.some((item) => item), {
+    message: "โปรดเลือกอย่างน้อย 1 ตัวเลือก",
+  }),
+});
 
 export default function NovelSection({ novels }: { novels: Novel[] }) {
-  const lorem_novel_name_thai =
-    "เป็นอนุฯสุขใจยิ่ง ชื่อยาวไปๆ <我是姨娘> ยาวสุดๆเลยครับพี่ จะยาวไปไหนอะ ถามจริงเหอะ ขอร้องเลย เห้ยพอได้แล้ว!";
   const [isEnableCheckBox, setIsEnableCheckBox] = useState(false);
-  function EditBookMarkButton() {
+  const [checkedCount, setCheckedCount] = useState(0);
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      novels: [],
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    console.log(JSON.stringify(data, null, 2));
+  }
+
+  function EditBookMarkButton({ checkedCount }: { checkedCount: number }) {
     return (
       <>
-        {isEnableCheckBox ? (
+        {!isEnableCheckBox ? (
           <TooltipProvider delayDuration={400} skipDelayDuration={500}>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -58,7 +91,11 @@ export default function NovelSection({ novels }: { novels: Novel[] }) {
             >
               ยกเลิก
             </Button>
-            <Button variant="destructive" className=" rounded-full">
+            <Button
+              variant="destructive"
+              type="submit"
+              className="rounded-full"
+            >
               <Image
                 src={`/trashcan.svg`}
                 alt="bookmark icon"
@@ -66,7 +103,7 @@ export default function NovelSection({ novels }: { novels: Novel[] }) {
                 height={14}
                 className="mr-1 "
               />
-              <div className="flex justify-center items-center">ลบที่คั่น</div>
+              <div className="flex justify-center items-center">{`${checkedCount} รายการ`}</div>
             </Button>
           </>
         )}
@@ -77,73 +114,72 @@ export default function NovelSection({ novels }: { novels: Novel[] }) {
   return (
     <>
       <div className="md:max-w-screen-md lg:max-w-screen-lg mx-auto p-4 ">
-        <div className="flex justify-between items-center py-2 md:py-5 ">
-          <div className="text-sm text-slate-400">{`จำนวนทั้งหมด ${novels.length} รายการ`}</div>
-          <div className="flex gap-4">
-            <AddBookMarkButton />
-            <EditBookMarkButton />
-          </div>
-        </div>
-        {/* <div className="flex flex-wrap gap-4 justify-center"> */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center animate-fade-up animate-ease-out">
-          {novels.map((novel, index) => (
-            <div
-              className="max-w-xs w-full mb-4  h-[150px] rounded-md "
-              key={index}
-            >
-              <div className="flex">
-                <Link href={`/novel/${novel.id}`}>
-                  <Image
-                    src="https://placehold.co/100x150/png"
-                    alt="carousel image"
-                    width={100}
-                    height={150}
-                    className="h-full rounded-sm transition-transform transform hover:scale-105"
-                  />
-                </Link>
-                <div className="flex flex-1 flex-col justify-between w-full px-4">
-                  <div>
-                    <Link href={`/novel/${novel.id}`}>
-                      <div className=" text-slate-700 mb-1 font-bold line-clamp-2 hover:underline">
-                        {lorem_novel_name_thai}
-                      </div>
-                    </Link>
-                    <Link href={`/author/${novel.author}`}>
-                      <div className="text-xs hover:underline">
-                        {novel.author}
-                      </div>
-                    </Link>
-                  </div>
-                  <div>
-                    <div className="mb-2 flex items-center">
-                      <Image
-                        src={`/chapter.svg`}
-                        alt="chapter icon"
-                        width={14.77}
-                        height={12}
-                        className="mr-1 text-slate-400"
-                      />
-
-                      <div className="line-clamp-1 font-medium text-slate-400 text-sm">{`ตอนที่ ${novel.chapter_number}: ${lorem_novel_name_thai}`}</div>
-                    </div>
-                    <div className="flex items-center">
-                      <Image
-                        src={`/bookmark.svg`}
-                        alt="bookmark icon"
-                        width={14.77}
-                        height={12}
-                        className="mr-1"
-                      />
-                      <div className="font-medium text-slate-400 text-sm">
-                        {formatDateThai(novel.last_visit)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="flex justify-between items-center py-2 md:py-5 ">
+              <div className="text-sm text-slate-400">{`จำนวนทั้งหมด ${novels.length} รายการ`}</div>
+              <div className="flex gap-4">
+                <AddBookMarkButton />
+                <EditBookMarkButton checkedCount={checkedCount} />
               </div>
             </div>
-          ))}
-        </div>
+            {/* <div className="flex flex-wrap gap-4 justify-center"> */}
+            <FormField
+              control={form.control}
+              name="novels"
+              render={() => (
+                <FormItem>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center animate-fade-up animate-ease-out">
+                    {novels.map((novel) => (
+                      <FormField
+                        key={novel.id}
+                        control={form.control}
+                        name="novels"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={novel.id}
+                              className="flex flex-row novels-start space-x-3 space-y-0"
+                            >
+                              <NovelCard novel={novel} />
+                              {isEnableCheckBox && (
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(novel.id)}
+                                    onCheckedChange={(checked) => {
+                                      if (checked) {
+                                        setCheckedCount(
+                                          (prevCount) => prevCount + 1
+                                        ); // Increment count when checkbox is checked
+                                        field.onChange([
+                                          ...field.value,
+                                          novel.id,
+                                        ]);
+                                      } else {
+                                        setCheckedCount(
+                                          (prevCount) => prevCount - 1
+                                        ); // Decrement count when checkbox is unchecked
+                                        field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== novel.id
+                                          )
+                                        );
+                                      }
+                                    }}
+                                  />
+                                </FormControl>
+                              )}
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    ))}
+                  </div>
+                </FormItem>
+              )}
+            />
+          </form>
+        </Form>
       </div>
     </>
   );
