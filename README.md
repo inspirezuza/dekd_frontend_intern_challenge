@@ -1,5 +1,7 @@
 # Dekd Frontend Intern Challenge
 
+![image](https://github.com/inspirezuza/dekd_frontend_intern_challenge/assets/102022496/96a38ca0-e798-4076-acff-fd5606cab194)
+
 **Deploy:** https://dekd-frontend-intern-challenge.vercel.app/
 
 **โจทย์:** https://vintage-painter-228.notion.site/Frontend-Quiz-Dev-9466837540634c4094dcc6f5ef7c4b4f
