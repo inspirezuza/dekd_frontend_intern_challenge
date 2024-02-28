@@ -28,21 +28,49 @@ import { AddBookMarkButton } from "./AddBookMarkButton";
 export default function NovelSection({ novels }: { novels: Novel[] }) {
   const lorem_novel_name_thai =
     "เป็นอนุฯสุขใจยิ่ง ชื่อยาวไปๆ <我是姨娘> ยาวสุดๆเลยครับพี่ จะยาวไปไหนอะ ถามจริงเหอะ ขอร้องเลย เห้ยพอได้แล้ว!";
-
+  const [isEnableCheckBox, setIsEnableCheckBox] = useState(false);
   function EditBookMarkButton() {
     return (
-      <TooltipProvider delayDuration={400} skipDelayDuration={500}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="outline" className="text-slate-400 rounded-full">
-              แก้ไข
+      <>
+        {isEnableCheckBox ? (
+          <TooltipProvider delayDuration={400} skipDelayDuration={500}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="text-slate-400 rounded-full"
+                  onClick={() => setIsEnableCheckBox(!isEnableCheckBox)}
+                >
+                  แก้ไข
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className="transition-transform transform">
+                <p>แก้ไขรายการที่คั่นไว้</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <>
+            <Button
+              onClick={() => setIsEnableCheckBox(!isEnableCheckBox)}
+              variant="outline"
+              className="text-slate-400 rounded-full"
+            >
+              ยกเลิก
             </Button>
-          </TooltipTrigger>
-          <TooltipContent className="transition-transform transform">
-            <p>แก้ไขรายการที่คั่นไว้</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+            <Button variant="destructive" className=" rounded-full">
+              <Image
+                src={`/trashcan.svg`}
+                alt="bookmark icon"
+                width={12}
+                height={14}
+                className="mr-1 "
+              />
+              <div className="flex justify-center items-center">ลบที่คั่น</div>
+            </Button>
+          </>
+        )}
+      </>
     );
   }
 
