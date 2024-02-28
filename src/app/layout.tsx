@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 
 const font = Noto_Sans_Thai({
   subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {

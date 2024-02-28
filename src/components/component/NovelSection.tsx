@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
 import {
   Tooltip,
@@ -22,7 +22,7 @@ interface Novel {
 
 import { useState } from "react";
 import { LoadingSpinner } from "../ui/loadingspinner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Router } from "lucide-react";
 import { AddBookMarkButton } from "./AddBookMarkButton";
 import {
   Form,
@@ -40,6 +40,18 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import toast from "react-hot-toast";
 
 const FormSchema = z.object({
   novels: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -48,6 +60,7 @@ const FormSchema = z.object({
 });
 
 export default function NovelSection({ novels }: { novels: Novel[] }) {
+  const router = useRouter();
   const [isEnableCheckBox, setIsEnableCheckBox] = useState(false);
   const [checkedCount, setCheckedCount] = useState(0);
 
@@ -58,8 +71,47 @@ export default function NovelSection({ novels }: { novels: Novel[] }) {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(JSON.stringify(data, null, 2));
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    const arrNovelId = data.novels;
+    const url = new URL(
+      `${process.env.NEXT_PUBLIC_MOCK_NOVELS_API}/api/novels`
+    );
+
+    try {
+      toast.loading("กำลังลบ...");
+
+      const deletePromises = arrNovelId.map(async (id) => {
+        console.log(id);
+        const response = await fetch(`${url}/${id}`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Failed to delete novel with ID ${id}. Status: ${response.status}`
+          );
+        }
+
+        return response.json();
+      });
+
+      await Promise.all(deletePromises);
+
+      toast.dismiss();
+
+      toast.success("ลบเรียบร้อยแล้ว!");
+
+      router.refresh();
+
+      form.setValue("novels", []);
+    } catch (error) {
+      console.error("An error occurred while deleting novels:", error);
+      toast.dismiss();
+      toast.error("ลบไม่สำเร็จ");
+    } finally {
+      setIsEnableCheckBox(false);
+      setCheckedCount(0);
+    }
   }
 
   function EditBookMarkButton({ checkedCount }: { checkedCount: number }) {
@@ -91,20 +143,62 @@ export default function NovelSection({ novels }: { novels: Novel[] }) {
             >
               ยกเลิก
             </Button>
-            <Button
-              variant="destructive"
-              type="submit"
-              className="rounded-full"
-            >
-              <Image
-                src={`/trashcan.svg`}
-                alt="bookmark icon"
-                width={12}
-                height={14}
-                className="mr-1 "
-              />
-              <div className="flex justify-center items-center">{`${checkedCount} รายการ`}</div>
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                {checkedCount === 0 ? (
+                  <Button
+                    variant="destructive"
+                    className="rounded-full"
+                    disabled
+                  >
+                    <Image
+                      src={`/trashcan.svg`}
+                      alt="bookmark icon"
+                      width={12}
+                      height={14}
+                      className="mr-1 "
+                    />
+                    <div className="flex justify-center items-center">{`${checkedCount} รายการ`}</div>
+                  </Button>
+                ) : (
+                  <Button
+                    variant="destructive"
+                    // type="submit"
+                    className="rounded-full"
+                  >
+                    <Image
+                      src={`/trashcan.svg`}
+                      alt="bookmark icon"
+                      width={12}
+                      height={14}
+                      className="mr-1 "
+                    />
+                    <div className="flex justify-center items-center">{`${checkedCount} รายการ`}</div>
+                  </Button>
+                )}
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>โปรดตรวจสอบอีกครั้ง</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {`คุณต้องการที่จะลบ ${checkedCount} รายการที่คั่นทิ้งหรือไม่?`}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="rounded-full">
+                    ยกเลิก
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    className={` ${buttonVariants({
+                      variant: "destructive",
+                    })} rounded-full`}
+                    onClick={form.handleSubmit(onSubmit)}
+                  >
+                    ลบ
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </>
         )}
       </>

@@ -48,11 +48,11 @@ export function AddBookMarkButton() {
           error: <b>เพิ่มที่คั่นไม่สำเร็จ</b>,
         }
       );
-      router.refresh();
     } catch (error) {
       console.error("Error posting data:", error);
     } finally {
       setIsLoading(false);
+      router.refresh();
     }
   };
 

@@ -2,13 +2,17 @@ import { formatDateThai } from "@/lib/formatDateThai";
 
 async function getNovel(id: string) {
   const url = new URL(`${process.env.MOCK_NOVELS_API}/novels/${id}`);
-  url.searchParams.append("sortBy", "last_visit");
-  url.searchParams.append("order", "desc");
+  console.log(url);
   const response = await fetch(url, {
     cache: "no-store",
   });
   if (!response.ok) {
-    throw new Error("Can't fetch");
+    // throw new Error("Can't fetch");
+    return {
+      author: "ไม่พบข้อมูล อาจถูกลบไปแล้ว",
+      chapter_number: 0,
+      last_visit: new Date().toISOString(),
+    };
   }
   return response.json();
 }

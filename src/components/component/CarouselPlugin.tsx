@@ -49,11 +49,12 @@ export function CarouselPlugin() {
             <div>
               <Link href={`/novel/${index + 1}`}>
                 <Image
-                  src="https://placehold.co/700x373/png"
+                  src="/placeholder_carousel.png"
                   alt="carousel image"
                   width={700}
                   height={373}
                   className="w-full rounded-b-sm transition-transform transform hover:opacity-90"
+                  priority={true}
                 />
               </Link>
             </div>

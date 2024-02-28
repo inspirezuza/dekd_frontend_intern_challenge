@@ -21,7 +21,7 @@ export default function NovelCard({ novel }: { novel: Novel }) {
         <div className="flex">
           <Link href={`/novel/${novel.id}`}>
             <Image
-              src="https://placehold.co/100x150/png"
+              src="/placeholder_card.png"
               alt="carousel image"
               width={100}
               height={150}
