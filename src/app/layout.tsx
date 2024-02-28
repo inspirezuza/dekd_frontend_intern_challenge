@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Noto_Sans_Thai } from "next/font/google";
 import "./globals.css";
 
+import { Toaster } from "react-hot-toast";
+
 const font = Noto_Sans_Thai({
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],
@@ -19,7 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={font.className}>{children}</body>
+      <body className={font.className}>
+        <Toaster position="top-center" />
+        {children}
+      </body>
     </html>
   );
 }

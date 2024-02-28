@@ -11,6 +11,7 @@ import {
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export function AddBookMarkButton() {
   const router = useRouter();
@@ -28,21 +29,25 @@ export function AddBookMarkButton() {
     console.log(novelData);
 
     try {
-      const response = await fetch(
-        "https://65de0557dccfcd562f561883.mockapi.io/api/novels",
-        {
+      await toast.promise(
+        fetch("https://65de0557dccfcd562f561883.mockapi.io/api/novels", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(novelData),
+        }).then((response) => {
+          if (!response.ok) {
+            throw new Error("Can't add new bookmark");
+          }
+          return response.json();
+        }),
+        {
+          loading: "กำลังเพิ่ม...",
+          success: <b>เพิ่มที่คั่นสำเร็จ!</b>,
+          error: <b>เพิ่มที่คั่นไม่สำเร็จ</b>,
         }
       );
-
-      if (!response.ok) {
-        throw new Error("Can't add new bookmark");
-      }
-      console.log("Data posted successfully:", novelData);
       router.refresh();
     } catch (error) {
       console.error("Error posting data:", error);
